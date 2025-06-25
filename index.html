@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Supermercado</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .produtos, .carrinho {
+      flex: 1 1 400px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #333;
+      text-align: center;
+    }
+
+    .formulario {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 150px;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .formulario button {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .produto, li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .produto button, .remover {
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .adicionar {
+      background-color: #3498db;
+    }
+
+    .remover {
+      background-color: #e74c3c;
+      margin-left: 10px;
+    }
+
+    #limpar {
+      background-color: #e67e22;
+      color: white;
+      display: block;
+      margin: 15px auto 0;
+    }
+
+    #total {
+      font-weight: bold;
+      text-align: center;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="produtos">
+      <h2>Adicionar Produto</h2>
+      <div class="formulario">
+        <input type="text" id="nome-produto" placeholder="Nome do produto">
+        <input type="number" id="preco-produto" placeholder="Preço" min="0" step="0.01">
+        <button id="adicionar-produto">Adicionar</button>
+      </div>
+
+      <h2>Produtos</h2>
+      <div id="lista-produtos"></div>
+    </div>
+
+    <div class="carrinho">
+      <h2>Carrinho</h2>
+      <ul id="lista-carrinho"></ul>
+      <p><strong>Total:</strong> R$ <span id="total">0.00</span></p>
+      <button id="limpar">Limpar Carrinho</button>
+    </div>
+
+  </div>
+
+  <script>
+    const listaProdutos = document.getElementById("lista-produtos");
+    const listaCarrinho = document.getElementById("lista-carrinho");
+    const botaoLimpar = document.getElementById("limpar");
+    const totalSpan = document.getElementById("total");
+    const botaoAdicionarProduto = document.getElementById("adicionar-produto");
+
+    function carregarProdutos() {
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      listaProdutos.innerHTML = "";
+
+      produtos.forEach((produto, index) => {
+        const div = document.createElement("div");
+        div.className = "produto";
+        div.innerHTML = `
+          ${produto.nome} - R$ ${produto.preco.toFixed(2)}
+          <div>
+            <button class="adicionar" data-produto="${produto.nome}" data-preco="${produto.preco}">Adicionar</button>
+            <button class="remover" data-index="${index}">Remover</button>
+          </div>
+        `;
+        listaProdutos.appendChild(div);
+
+        // Botão de adicionar ao carrinho
+        const botaoAdd = div.querySelector(".adicionar");
+        botaoAdd.addEventListener("click", () =>
+          adicionarAoCarrinho(produto.nome, produto.preco)
+        );
+
+        // Botão de remover produto da lista
+        const botaoRemove = div.querySelector(".remover");
+        botaoRemove.addEventListener("click", () => {
+          removerProduto(index);
+        });
+      });
+    }
+
+    function adicionarAoCarrinho(nome, preco) {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+
+      if (carrinho[nome]) {
+        carrinho[nome].quantidade += 1;
+      } else {
+        carrinho[nome] = { preco, quantidade: 1 };
+      }
+
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      carregarCarrinho();
+    }
+
+    function removerDoCarrinho(nome) {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+
+      if (carrinho[nome]) {
+        carrinho[nome].quantidade -= 1;
+        if (carrinho[nome].quantidade <= 0) {
+          delete carrinho[nome];
+        }
+        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        carregarCarrinho();
+      }
+    }
+
+    function removerProduto(index) {
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      produtos.splice(index, 1);
+      localStorage.setItem("produtos", JSON.stringify(produtos));
+      carregarProdutos();
+    }
+
+    function carregarCarrinho() {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+      listaCarrinho.innerHTML = "";
+      let total = 0;
+
+      for (const nome in carrinho) {
+        const item = carrinho[nome];
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${nome} x${item.quantidade} - R$ ${(item.quantidade * item.preco).toFixed(2)}
+          <button class="remover" data-nome="${nome}">Remover</button>
+        `;
+        listaCarrinho.appendChild(li);
+
+        li.querySelector(".remover").addEventListener("click", () =>
+          removerDoCarrinho(nome)
+        );
+
+        total += item.quantidade * item.preco;
+      }
+
+      totalSpan.textContent = total.toFixed(2);
+    }
+
+    botaoAdicionarProduto.addEventListener("click", () => {
+      const nomeInput = document.getElementById("nome-produto");
+      const precoInput = document.getElementById("preco-produto");
+
+      const nome = nomeInput.value.trim();
+      const preco = parseFloat(precoInput.value);
+
+      if (!nome || isNaN(preco) || preco <= 0) {
+        alert("Digite um nome válido e um preço maior que zero.");
+        return;
+      }
+
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      produtos.push({ nome, preco });
+      localStorage.setItem("produtos", JSON.stringify(produtos));
+
+      nomeInput.value = "";
+      precoInput.value = "";
+
+      carregarProdutos();
+    });
+
+    botaoLimpar.addEventListener("click", () => {
+      localStorage.removeItem("carrinho");
+      carregarCarrinho();
+    });
+
+    // Inicialização
+    carregarProdutos();
+    carregarCarrinho();
+  </script>
+</body>
+</html>
