@@ -149,8 +149,9 @@
     const totalSpan = document.getElementById("total");
     const botaoAdicionarProduto = document.getElementById("adicionar-produto");
 
+    // (1) Lê os produtos salvos no localStorage
     function carregarProdutos() {
-      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || []; // ← localStorage (1)
       listaProdutos.innerHTML = "";
 
       produtos.forEach((produto, index) => {
@@ -165,22 +166,23 @@
         `;
         listaProdutos.appendChild(div);
 
-        // Botão de adicionar ao carrinho
+        // (2) Clique em "Adicionar" um produto ao carrinho
         const botaoAdd = div.querySelector(".adicionar");
-        botaoAdd.addEventListener("click", () =>
+        botaoAdd.addEventListener("click", () => // ← EventListener (1)
           adicionarAoCarrinho(produto.nome, produto.preco)
         );
 
-        // Botão de remover produto da lista
+        // (3) Clique em "Remover" um produto da lista
         const botaoRemove = div.querySelector(".remover");
-        botaoRemove.addEventListener("click", () => {
+        botaoRemove.addEventListener("click", () => { // ← EventListener (2)
           removerProduto(index);
         });
       });
     }
 
+    // (4) Adiciona produto ao carrinho
     function adicionarAoCarrinho(nome, preco) {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {}; // ← localStorage (2)
 
       if (carrinho[nome]) {
         carrinho[nome].quantidade += 1;
@@ -188,32 +190,35 @@
         carrinho[nome] = { preco, quantidade: 1 };
       }
 
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      localStorage.setItem("carrinho", JSON.stringify(carrinho)); // ← localStorage (3)
       carregarCarrinho();
     }
 
+    // (5) Remove item do carrinho
     function removerDoCarrinho(nome) {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {}; // ← localStorage (4)
 
       if (carrinho[nome]) {
         carrinho[nome].quantidade -= 1;
         if (carrinho[nome].quantidade <= 0) {
           delete carrinho[nome];
         }
-        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        localStorage.setItem("carrinho", JSON.stringify(carrinho)); // ← localStorage (5)
         carregarCarrinho();
       }
     }
 
+    // (6) Remove produto da lista de produtos
     function removerProduto(index) {
-      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || []; // ← localStorage (6)
       produtos.splice(index, 1);
-      localStorage.setItem("produtos", JSON.stringify(produtos));
+      localStorage.setItem("produtos", JSON.stringify(produtos)); // ← localStorage (7)
       carregarProdutos();
     }
 
+    // (7) Carrega e exibe carrinho
     function carregarCarrinho() {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {}; // ← localStorage (8)
       listaCarrinho.innerHTML = "";
       let total = 0;
 
@@ -226,7 +231,8 @@
         `;
         listaCarrinho.appendChild(li);
 
-        li.querySelector(".remover").addEventListener("click", () =>
+        // (8) Clique em "Remover" do carrinho
+        li.querySelector(".remover").addEventListener("click", () => // ← EventListener (3)
           removerDoCarrinho(nome)
         );
 
@@ -236,7 +242,8 @@
       totalSpan.textContent = total.toFixed(2);
     }
 
-    botaoAdicionarProduto.addEventListener("click", () => {
+    // (9) Clique em "Adicionar Produto"
+    botaoAdicionarProduto.addEventListener("click", () => { // ← EventListener (4)
       const nomeInput = document.getElementById("nome-produto");
       const precoInput = document.getElementById("preco-produto");
 
@@ -248,9 +255,9 @@
         return;
       }
 
-      const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+      const produtos = JSON.parse(localStorage.getItem("produtos")) || []; // ← localStorage (9)
       produtos.push({ nome, preco });
-      localStorage.setItem("produtos", JSON.stringify(produtos));
+      localStorage.setItem("produtos", JSON.stringify(produtos)); // ← localStorage (10)
 
       nomeInput.value = "";
       precoInput.value = "";
@@ -258,8 +265,9 @@
       carregarProdutos();
     });
 
-    botaoLimpar.addEventListener("click", () => {
-      localStorage.removeItem("carrinho");
+    // (10) Clique em "Limpar Carrinho"
+    botaoLimpar.addEventListener("click", () => { // ← EventListener (5)
+      localStorage.removeItem("carrinho"); // ← localStorage (11)
       carregarCarrinho();
     });
 
