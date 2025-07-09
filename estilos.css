@@ -62,7 +62,7 @@ button {
 }
 
 .formulario button {
-  background-color: #27ae60;
+  background-color: #1cca64;
   color: white;
 }
 
@@ -116,3 +116,34 @@ li {
   }
 }
 
+body.dark {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+body.dark .container {
+  background-color: #1e1e1e;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+body.dark input,
+body.dark button,
+body.dark .produto,
+body.dark li {
+  background-color: #2c2c2c;
+  color: #f5f5f5;
+  border: 1px solid #555;
+}
+
+body.dark .remover {body.dark .formulario button {
+  background-color: #27ae60;
+  color: white;
+};
+}
+body.dark h2 {
+  color: #f5f5f5;
+}
+body.dark .formulario button {
+  background-color: #0b5028;
+  color: white;
+}

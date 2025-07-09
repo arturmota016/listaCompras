@@ -152,3 +152,22 @@ botaoLimpar.addEventListener("click", () => {
 // Inicialização
 carregarProdutos();
 carregarCarrinho();
+
+const botaoDark = document.getElementById("toggle-dark-mode");
+
+// Aplica o modo salvo (se existir)
+if (localStorage.getItem("modo") === "dark") {
+  document.body.classList.add("dark");
+}
+
+// Alterna o modo escuro ao clicar
+botaoDark.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+
+  // Salva a preferência no localStorage
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("modo", "dark");
+  } else {
+    localStorage.setItem("modo", "light");
+  }
+});
