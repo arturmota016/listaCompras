@@ -15,6 +15,7 @@ body {
   min-height: 100vh;
 }
 
+
 .container {
   width: 100%;
   max-width: 1100px;
@@ -26,6 +27,7 @@ body {
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+  
 }
 
 .produtos,
@@ -146,4 +148,15 @@ body.dark h2 {
 body.dark .formulario button {
   background-color: #0b5028;
   color: white;
+}
+button#botao-esconder{
+  width: 80px;
+  text-align: center;
+  height: 45px;
+}
+.visivel{
+  display: inline;
+}
+.invisivel{
+  display: none;
 }

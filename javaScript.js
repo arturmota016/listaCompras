@@ -171,3 +171,21 @@ botaoDark.addEventListener("click", () => {
     localStorage.setItem("modo", "light");
   }
 });
+
+
+const botaoEsconder = document.getElementById("botao-esconder");
+
+const contado = document.getElementById("contado")
+
+//if (localStorage.getItem("contar") === "invisivel"){
+ // contado.className = 'invisivel'
+//}
+
+botaoEsconder.addEventListener("click", () => {
+  contado.className = 'invisivel'
+  
+  //if (localStorage.setItem("contar")){
+   // contado.className = 'invisivel'
+  //}
+})
+

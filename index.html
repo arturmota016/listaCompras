@@ -8,10 +8,11 @@
 <body>
   <button id="toggle-dark-mode">🌙 Alternar Modo Escuro</button>
   <div class="container">
+    <button id="botao-esconder">Esconder contador</button>
 
     <div class="produtos">
       <h2>Adicionar Produto</h2>
-      <p>Total de cliques no botão <strong>Adicionar Produto</strong>: <span id="contador-adicionar">0</span></p>
+      <p id="contado" class="visivel">Total de cliques no botão <strong>Adicionar Produto</strong>: <span id="contador-adicionar">0</span></p>
 
       <div class="formulario">
         <input type="text" id="nome-produto" placeholder="Nome do produto">
@@ -28,7 +29,7 @@
       <ul id="lista-carrinho"></ul>
       <p><strong>Total:</strong> R$ <span id="total">0.00</span></p>
       <button id="limpar">Limpar Carrinho</button>
-      <p>Total de cliques no botão <strong>Limpar Carrinho</strong>: <span id="contador-limpar">0</span></p>
+      <p id="contado" class="visivel">Total de cliques no botão <strong>Limpar Carrinho</strong>: <span id="contador-limpar">0</span></p>
 
     </div>
 
